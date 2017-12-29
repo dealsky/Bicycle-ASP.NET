@@ -1,0 +1,139 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "个人中心";
+    @Styles.Render("~/Content/userInfo.css")
+}
+
+<div class="user-info">
+
+    <div class="row col-md-3">
+        <div class="user-info-avatar">
+            <img src="~/Content/image/hp1.jpg" class="img-rounded" id="headPortrait" width="180" height="180" data-toggle="tooltip" data-placement="bottom" title="更换你的头像" />
+        </div>
+
+        <h3 id="userName"></h3>
+        <a href="javascript:void(0)" id="userEmail"></a>
+    </div>
+
+    <div class="col-md-7">
+        <ul id="userInfoTab" class="nav nav-tabs">
+            <li class="active"><a href="#userInfo" data-toggle="tab">个人信息</a></li>
+            <li><a href="#rentalCard" data-toggle="tab">租借卡</a></li>
+        </ul>
+
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="userInfo">
+                <div class="user-body">
+                    <form action="/User/UpdateUserInfo" method="post" id="userBody">
+                        <div class="col-md-5">
+                            <div class="one-thing">
+                                <label>账号</label>
+                                <input type="text" class="form-control" name="userAcc" v-model="userAcc" disabled="disabled" />
+                            </div>
+                            <div class="one-thing">
+                                <label>昵称</label>
+                                <input type="text" class="form-control" name="userName" v-model="userName" />
+                            </div>
+                            <div class="one-thing">
+                                <label>邮箱</label>
+                                <input type="email" class="form-control" name="userEmail" placeholder="example@abc.com" v-model="userEmail" />
+                            </div>
+                            <div class="one-thing">
+                                <label>联系电话</label>
+                                <input type="text" class="form-control" name="userTel" v-model="userTel" />
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="one-thing">
+                                <label>身份证号码</label><br />
+                                <input type="text" class="form-control" name="userIdCard" v-model="userIdCard" />
+                            </div>
+                            <div class="one-thing">
+                                <label style="margin-bottom: 17px;">性别</label><br />
+                                <input type="radio" value="male" name="userSex" v-model="userSex" /> 男
+                                <input type="radio" value="female" name="userSex" v-model="userSex" /> 女
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <button type="submit" class="update-button button button-action button-rounded" style="margin-top: 30px;">更新信息</button>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="rentalCard">
+
+                <div class="rental-card" v-if="recown === true">
+                    <div class="card-name">
+                        <p>租借卡</p>
+                        <div class="rental-upright">
+                            <i class="fa fa-lock fa-lg rental-lock" v-if="recstatus === 0"></i>
+                            <i class="fa fa-close fa-lg rental-close" v-on:click="deleteRentalCard"></i>
+                        </div>
+                    </div>
+                    <div class="card-hr">
+                        <hr />
+                    </div>
+                    <div class="card-message left" v-on:click="openChargeMoney">
+                        <p class="rental-number">卡号　{{ recid }}</p>
+                        <p class="rental-money">余额　{{ recbalance }}元</p>
+                        <p class="rental-time">办理时间　{{ recoptime }}</p>
+                    </div>
+                    <i class="fa fa-bicycle fa-5x bicycle-icon left"></i>
+                </div>
+
+                <div class="add-card" v-if="recown === false">
+                    <a v-on:click="addRentalCard"><span class="glyphicon glyphicon-plus add-icon"></span></a>
+                    <div class="add-card-message">
+                        <p>添加租借卡</p>
+                    </div>
+                </div>
+                
+                <div class="clear"></div>
+
+                <div class="rental-card-info">
+                    <h4>注意事项</h4>
+                    <ol>
+                        <li>借车前请先办理租借卡</li>
+                        <li>充值金额请点击租借卡余额</li>
+                        <li>若租借卡余额小于等于0，则租借卡被锁定，无法使用</li>
+                        <li>租借卡余额保留两位小数显示</li>
+                    </ol>
+                </div>
+
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="chargeMoney">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">充值</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div id="rentalHidden">
+                                    <input type="hidden" name="recId" />
+                                </div>
+                                <div id="rentalNumber" class="row">
+                                    <label class="modal-label">卡号</label>
+                                    <div class="modal-show">{{ recid }}</div>
+                                </div>
+                                <div id="rentalBalance" class="row">
+                                    <label class="modal-label">余额</label>
+                                    <div class="modal-show">{{ recbalance }}</div>
+                                </div>
+                                <div class="row" id="toCharge">
+                                    <label class="modal-label">充值金额</label>
+                                    <input style="margin-left: 118px;" type="number" class="form-control small-text" id="moneyNum" name="recCharge" max="99999999" min="1" v-on:input="keyMonery"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" disabled="disabled" id="chargeBtn" v-on:click="confirmCharge">确认充值</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/Scripts/userInfo.js")

@@ -1,0 +1,63 @@
+﻿.user-acc {
+    height: 30px;
+    line-height: 30px;
+    margin-top: 35px;
+}
+.register-label,
+.login-label {
+    margin-left: 180px;
+    float: left;
+}
+
+.login-text {
+    margin-left: 25px;
+    width: 180px;
+    float: left;
+}
+
+.register-text {
+    margin-left: 25px;
+}
+
+.login-body {
+    width: 450px;
+}
+
+.error-message {
+    margin-left: 340px;
+    float: left;
+    height: 40px;
+}
+.error-message .register-message,
+.error-message .login-message {
+    height: 40px;
+    line-height: 10px;
+}
+
+.register-label {
+    float: left;
+    margin-left: 180px;
+}
+
+.register-mar {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.register-error-message {
+    color: #a94442;
+    font-size: 12px;
+}
+
+.glyp-right {
+    margin-right: 5%;
+}
+
+.register-body {
+    margin: 10px auto;
+}
+
+#modalAnnouncement .announcement-body {
+    padding: 5% 15%;
+    font-size: 16px;
+}
