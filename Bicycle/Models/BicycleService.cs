@@ -25,5 +25,12 @@ namespace Bicycle.Models
             db.SaveChanges();
             return bicycle;
         }
+
+        public static List<module_bicycle> getAllBicycle()
+        {
+            var db = new DBModel();
+            List < module_bicycle > list = db.module_bicycle.ToList();
+            return list;
+        }
     }
 }

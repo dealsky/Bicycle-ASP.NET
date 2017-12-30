@@ -36,5 +36,12 @@ namespace Bicycle.Models
             var site = db.module_site.FirstOrDefault(u => u.SiteId == siteId);
             return site;
         }
+
+        public static List<module_site> getAllSite()
+        {
+            var db = new DBModel();
+            List<module_site> list = db.module_site.OrderBy(u => u.SiteAmount).ToList();
+            return list;
+        }
     }
 }

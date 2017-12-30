@@ -29,6 +29,12 @@ namespace Bicycle.Controllers
             return View();
         }
 
+        [Filters.UserAuthorize]
+        public ActionResult Situation()
+        {
+            return View();
+        }
+
         [HttpPost]
         public JsonResult Login(string userAcc, string userPass)
         {
@@ -404,6 +410,88 @@ namespace Bicycle.Controllers
                     dictionary.Add("log", "ok");
                 }
             }
+            return Json(dictionary);
+        }
+
+        [Filters.UserAuthorize]
+        [HttpPost]
+        public JsonResult GetSituation()
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+
+            List<module_bicycle> bicList = BicycleService.getAllBicycle();
+            Dictionary<string, int> bicMap = new Dictionary<string, int>();
+            Dictionary<string, int> bicBorrowMap = new Dictionary<string, int>();
+            int borrowSum = 0;
+
+            foreach (module_bicycle bicycle in bicList)
+            {
+                if (bicMap.ContainsKey(bicycle.BicType))
+                {
+                    bicMap[bicycle.BicType]++;
+                    bicBorrowMap[bicycle.BicType] += (int)bicycle.BicBorrowedCount;
+                }
+                else
+                {
+                    bicMap.Add(bicycle.BicType, 1);
+                    bicBorrowMap.Add(bicycle.BicType, (int)bicycle.BicBorrowedCount);
+                }
+                borrowSum += (int)bicycle.BicBorrowedCount;
+            }
+
+            int maxNum = int.MinValue;
+            int minNum = int.MaxValue;
+            string maxType = "";
+            string minType = "";
+            foreach (string bicType in bicMap.Keys)
+            {
+                if (bicMap[bicType] > maxNum)
+                {
+                    maxType = bicType;
+                    maxNum = bicMap[bicType];
+                }
+                if (bicMap[bicType] < minNum)
+                {
+                    minType = bicType;
+                    minNum = bicMap[bicType];
+                }
+            }
+            dictionary.Add("bicNum", bicList.Count);
+            dictionary.Add("maxType", maxType);
+            dictionary.Add("maxTypeNum", maxNum);
+            dictionary.Add("minType", minType);
+            dictionary.Add("minTypeNum", minNum);
+
+            maxNum = int.MinValue;
+            minNum = int.MaxValue;
+            maxType = "";
+            minType = "";
+            foreach (string bicType in bicBorrowMap.Keys)
+            {
+                if (bicBorrowMap[bicType] > maxNum)
+                {
+                    maxType = bicType;
+                    maxNum = bicBorrowMap[bicType];
+                }
+                if (bicBorrowMap[bicType] < minNum)
+                {
+                    minType = bicType;
+                    minNum = bicBorrowMap[bicType];
+                }
+            }
+            dictionary.Add("borrowSum", borrowSum);
+            dictionary.Add("maxBorType", maxType);
+            dictionary.Add("maxBorTypeNum", maxNum);
+            dictionary.Add("minBorType", minType);
+            dictionary.Add("minBorTypeNum", minNum);
+
+            List<module_site> siteList = SiteService.getAllSite();
+            dictionary.Add("siteNum", siteList.Count);
+            dictionary.Add("maxSite", siteList[siteList.Count - 1].SiteName);
+            dictionary.Add("maxSiteNum", siteList[siteList.Count - 1].SiteAmount);
+            dictionary.Add("minSite", siteList[0].SiteName);
+            dictionary.Add("minSiteNum", siteList[0].SiteAmount);
+
             return Json(dictionary);
         }
 

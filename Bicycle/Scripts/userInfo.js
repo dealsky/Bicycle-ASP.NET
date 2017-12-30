@@ -131,30 +131,39 @@ $(document).ready(function () {
             deleteRentalCard: function () {
 
                 var str = rentalCard.recstatus === 1 ? "该租借卡还有余额，你确定要删除吗？" : "你确定要删除吗？";
-                var flag = confirm(str);
-
-                if (flag) {
-                    $.ajax({
-                        url: "/User/DeleteRentalCard",
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            recid: this.recid
-                        },
-                        success: function (data) {
-                            if (data.log === "ok") {
-                                rentalCard.recown = false;
-                                $.growl({
-                                    title: "成功",
-                                    message: "租借卡删除成功!"
-                                });
+                var recId = this.recid;
+                var d = dialog({
+                    title: '警告',
+                    content: str,
+                    okValue: '确定',
+                    ok: function () {
+                        $.ajax({
+                            url: "/User/DeleteRentalCard",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                recid: recId
+                            },
+                            success: function (data) {
+                                if (data.log === "ok") {
+                                    rentalCard.recown = false;
+                                    $.growl({
+                                        title: "成功",
+                                        message: "租借卡删除成功!"
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                console.log(xhr.responseText);
                             }
-                        },
-                        error: function (xhr) {
-                            console.log(xhr.responseText);
-                        }
-                    });
-                }
+                        });
+                        return true;
+                    },
+                    cancelValue: '取消',
+                    cancel: function () { }
+                });
+                d.width(280);
+                d.showModal();
             },
             openChargeMoney: function () {
                 $("#chargeMoney").modal("show");
