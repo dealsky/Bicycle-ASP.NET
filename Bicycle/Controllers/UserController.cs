@@ -495,5 +495,103 @@ namespace Bicycle.Controllers
             return Json(dictionary);
         }
 
+        [Filters.UserAuthorize]
+        [HttpPost]
+        public JsonResult TypeChart()
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            List<module_bicycle> bicList = BicycleService.getAllBicycle();
+            Dictionary<string, int> bicMap = new Dictionary<string, int>();
+            foreach (module_bicycle bicycle in bicList)
+            {
+                if (bicMap.ContainsKey(bicycle.BicType))
+                {
+                    bicMap[bicycle.BicType]++;
+                }
+                else
+                {
+                    bicMap.Add(bicycle.BicType, 1);
+                }
+            }
+            if(bicMap.Count <= 5)
+            {
+                return Json(bicMap);
+            }
+            else
+            {
+                Dictionary<string, int> bicMapSorted = bicMap.OrderByDescending(o => o.Value).ToDictionary(p => p.Key, o => o.Value);
+                int count = 0;
+                foreach(string key in bicMapSorted.Keys)
+                {
+                    dictionary.Add(key, bicMapSorted[key]);
+                    count++;
+                    if(count == 5)
+                    {
+                        break;
+                    }
+                }
+                return Json(dictionary);
+            }
+        }
+
+        [Filters.UserAuthorize]
+        [HttpPost]
+        public JsonResult BorrowChart()
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            List<module_bicycle> bicList = BicycleService.getAllBicycle();
+            Dictionary<string, int> bicBorrowMap = new Dictionary<string, int>();
+
+            foreach (module_bicycle bicycle in bicList)
+            {
+                if (bicBorrowMap.ContainsKey(bicycle.BicType))
+                {
+                    bicBorrowMap[bicycle.BicType] += (int)bicycle.BicBorrowedCount;
+                }
+                else
+                {
+                    bicBorrowMap.Add(bicycle.BicType, (int)bicycle.BicBorrowedCount);
+                }
+            }
+            if (bicBorrowMap.Count <= 5)
+            {
+                return Json(bicBorrowMap);
+            }
+            else
+            {
+                Dictionary<string, int> bicBorrowMapSorted = bicBorrowMap.OrderByDescending(o => o.Value).ToDictionary(p => p.Key, o => o.Value);
+                int count = 0;
+                foreach (string key in bicBorrowMapSorted.Keys)
+                {
+                    dictionary.Add(key, bicBorrowMapSorted[key]);
+                    count++;
+                    if (count == 5)
+                    {
+                        break;
+                    }
+                }
+                return Json(dictionary);
+            }
+        }
+
+        [Filters.UserAuthorize]
+        [HttpPost]
+        public JsonResult SiteChart()
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            List<module_site> siteList = SiteService.getAllSite();
+            siteList.Sort(delegate (module_site a, module_site b)
+            {
+                int numA = (int)a.SiteAmount;
+                int numB = (int)b.SiteAmount;
+                return numB.CompareTo(numA);
+            });
+            int len = siteList.Count < 5 ? siteList.Count : 5;
+            for(int i = 0; i< len; i++)
+            {
+                dictionary.Add(siteList[i].SiteName, siteList[i].SiteAmount);
+            }
+            return Json(dictionary);
+        }
     }
 }
