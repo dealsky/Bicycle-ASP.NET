@@ -32,5 +32,29 @@ namespace Bicycle.Models
             List < module_bicycle > list = db.module_bicycle.ToList();
             return list;
         }
+
+        public static module_bicycle insertBicycle(module_bicycle bicycle)
+        {
+            var db = new DBModel();
+            db.module_bicycle.Add(bicycle);
+            db.SaveChanges();
+            return bicycle;
+        }
+
+        public static bool deleteBicycleById(int bicId)
+        {
+            var db = new DBModel();
+            var bicycle = db.module_bicycle.FirstOrDefault(u => u.BicId == bicId);
+            if (bicycle != null)
+            {
+                db.module_bicycle.Remove(bicycle);
+                db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

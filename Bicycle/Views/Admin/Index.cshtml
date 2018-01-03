@@ -1,0 +1,81 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPageAdmin.cshtml";
+    ViewBag.Title = "自行车管理";
+}
+
+@if (Session["admin"] != null)
+{
+    <div class="admin-table" id="adminTable">
+        <span class="label label-info">自行车管理</span>
+        <div id="toolbar">
+            <div class="btn-group">
+                <button class="btn btn-default" data-toggle="modal" data-target="#modalAddTable">
+                    <i class="fa fa-plus fa-lg"></i> 新增
+                </button>
+                <button class="btn btn-default" id="delete-table">
+                    <i class="fa fa-trash fa-lg"></i> 删除
+                </button>
+            </div>
+        </div>
+        <table id="BicycleTable" data-toolbar="#toolbar"></table>
+
+        <div class="modal fade" id="modalAddTable" role="dialog" aria-labelledby="modalLabelAddTable" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="modalLabelAddTable">添加数据</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row spacing form-group has-feedback" id="bicType">
+                            <div class="col-md-3 col-md-offset-2">
+                                <label for="bic-type" class="control-label">类型</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input id="bic-type" type="text" class="form-control" />
+                                <div class="feed-back">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row spacing form-group has-feedback" id="bicPrice">
+                            <div class="col-md-3 col-md-offset-2">
+                                <label for="bic-price" class="control-label">价格(元/小时)</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input id="bic-price" type="text" class="form-control" />
+                                <div class="feed-back">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row spacing form-group has-feedback" id="bicSite">
+                            <div class="col-md-3 col-md-offset-2">
+                                <label for="bic-site" class="control-label">站点</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input id="bic-site" type="text" class="form-control" />
+                                <div class="feed-back">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row spacing form-group has-feedback" id="bicTime">
+                            <div class="col-md-3 col-md-offset-2">
+                                <label for="bic-time" class="control-label">购买时间</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input id="bic-time" type="date" class="form-control" />
+                                <div class="feed-back">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="addTableConfirm" disabled="disabled">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Scripts.Render("~/Scripts/adminbicycle.js")

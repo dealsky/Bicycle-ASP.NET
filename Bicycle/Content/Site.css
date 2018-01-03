@@ -244,3 +244,12 @@ textarea {
 .font12 {
     font-size: 12px;
 }
+
+.font16 {
+    font-size: 16px;
+}
+
+.admin-table {
+    padding: 0 6%;
+    margin-top: 20px;
+}

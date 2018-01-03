@@ -1,0 +1,17 @@
+﻿.spacing {
+    margin-bottom: 20px;
+}
+
+.glyp-right {
+    margin-right: 15px;
+}
+
+.error-message {
+    color: #a94442;
+    font-size: 12px;
+}
+
+#growls.default {
+    top: 66px;
+    right: 10px; 
+}

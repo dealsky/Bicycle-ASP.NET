@@ -30,5 +30,22 @@ namespace Bicycle.Models
             db.SaveChanges();
             return park;
         }
+
+        public static bool deleteParkByBicId(int bicId)
+        {
+            var db = new DBModel();
+            var park = db.module_park.FirstOrDefault(u => u.BicId == bicId);
+            if (park != null)
+            {
+                SiteService.updateSiteAmount(park.SiteId, "borrow");
+                db.module_park.Remove(park);
+                db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
