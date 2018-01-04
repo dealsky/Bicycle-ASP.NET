@@ -16,6 +16,11 @@ namespace Bicycle.Controllers
             return View();
         }
 
+        [Filters.AdminAuthorize]
+        public ActionResult AdminSite()
+        {
+            return View();
+        }
 
         public JsonResult Login(string adminAcc, string adminPass)
         {
@@ -118,6 +123,81 @@ namespace Bicycle.Controllers
                 BicycleService.deleteBicycleById(arr[i]);
             }
             return Json("ok");
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult UpdataBicycle(int bicId, string bicType, double bicPrice)
+        {
+            module_bicycle bicycle = BicycleService.updataBicycleInfo(bicId, bicType, bicPrice);
+            if(bicycle != null)
+            {
+                return Json("ok");
+            }
+            else
+            {
+                return Json("error");
+            }
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult GetSite()
+        {
+            List<module_site> list = SiteService.getAllSite();
+            JsonSerializerSettings setting = new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            var ret = JsonConvert.SerializeObject(list, setting);
+            return Json(ret);
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult AddSite(string siteArea, string siteName)
+        {
+            module_manager admin = (module_manager)Session["admin"];
+            if(admin != null)
+            {
+                module_site site = new module_site();
+                site.MagId = admin.MagId;
+                site.SiteArea = siteArea;
+                site.SiteName = siteName;
+                site.SiteAmount = 0;
+                SiteService.insertSite(site);
+                return Json("ok");
+            }
+            else
+            {
+                return Json("error");
+            }
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult RemoveSite(List<int> siteIdList)
+        {
+            for(int i = 0; i<siteIdList.Count; i++)
+            {
+                SiteService.deleteSite(siteIdList[i]);
+            }
+            return Json("ok");
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult UpdataSite(int siteId, string siteName)
+        {
+            module_site site = SiteService.updataSiteName(siteId, siteName);
+            if(site != null)
+            {
+                return Json("ok");
+            }
+            else
+            {
+                return Json("error");
+            }
         }
     }
 }

@@ -5,7 +5,9 @@ $(document).ready(function () {
     bicycleTable = new Vue({
         el: "#adminTable",
         data: {
-            bicycles: ""
+            bicycles: "",
+            flag1: "ok",
+            flag2: "ok"
         },
         mounted: function () {
             $.ajax({
@@ -21,6 +23,111 @@ $(document).ready(function () {
                     console.log(xhr.responseText);
                 }
             });
+        },
+        methods: {
+            updataTable: function () {
+                var arr = ($('#BicycleTable').bootstrapTable('getSelections'));
+                if (arr.length === 1) {
+                    if (arr[0].BicBorrowed === 0) {
+                        $("#BicId").text(arr[0].BicId);
+                        $("#Type").val(arr[0].BicType);
+                        $("#Price").val(arr[0].BicRentPrice);
+                        $("#Site").val(arr[0].module_park[0].SiteId);
+                        $('#modalUpdataTable').modal('show');
+                    } else {
+                        $.growl.error({
+                            title: "失败",
+                            message: "无法修改处于租用状态的自行车!"
+                        });
+                    }
+                } else {
+                    $.growl.error({
+                        title: "失败",
+                        message: "请选择一项进行修改!"
+                    });
+                }
+            },
+            changeType: function (e) {
+                var text = e.target.value;
+                if (text.length > 0 && text.length < 10) {
+                    $("#bicTypeG").addClass("has-success");
+                    $("#bicTypeG").removeClass("has-error");
+                    $("#bicTypeG .feed-back").html("<span class=\"glyphicon glyphicon-ok form-control-feedback glyp-right\"></span>");
+                    this.flag1 = "ok";
+                } else {
+                    $("#bicTypeG").addClass("has-error");
+                    $("#bicTypeG").removeClass("has-success");
+                    $("#bicTypeG .feed-back").html("<span class=\"glyphicon glyphicon-remove form-control-feedback glyp-right\"></span>\n" +
+                        "                                <span class=\"error-message\">类型名太长或太短</span>");
+                    this.flag1 = "error";
+                }
+            },
+            changePrice: function (e) {
+                var text = e.target.value;
+                if (!isNaN(text)) {
+                    $("#bicPriceG").addClass("has-success");
+                    $("#bicPriceG").removeClass("has-error");
+                    $("#bicPriceG .feed-back").html("<span class=\"glyphicon glyphicon-ok form-control-feedback glyp-right\"></span>");
+                    this.flag2 = "ok";
+                } else {
+                    $("#bicPriceG").addClass("has-error");
+                    $("#bicPriceG").removeClass("has-success");
+                    $("#bicPriceG .feed-back").html("<span class=\"glyphicon glyphicon-remove form-control-feedback glyp-right\"></span>\n" +
+                        "                                <span class=\"error-message\">输入必须为数字</span>");
+                    this.flag2 = "error";
+                }
+            },
+            saveChanges: function () {
+                var bicId = $("#BicId").text();
+                var bicType = $("#Type").val();
+                var bicPrice = $("#Price").val();
+                
+                if (this.flag1 === "ok" && this.flag2 === "ok") {
+                    $.ajax({
+                        url: "/Admin/UpdataBicycle",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            bicId: bicId,
+                            bicType: bicType,
+                            bicPrice: bicPrice
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (data === "ok") {
+                                $('#modalUpdataTable').modal('hide');
+                                $.growl.notice({
+                                    title: "成功",
+                                    message: "修改成功"
+                                });
+                                $.ajax({
+                                    url: "/Admin/GetBicycleTable",
+                                    type: "post",
+                                    dataType: "json",
+                                    success: function (data) {
+                                        data = eval("(" + data + ")");
+                                        bicycleTable.bicycles = data;
+                                        createTable(bicycleTable);
+                                    },
+                                    error: function (xhr) {
+                                        console.log(xhr.responseText);
+                                    }
+                                });
+                            } else {
+                                console.log("error");
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                } else {
+                    $.growl.error({
+                        title: "错误",
+                        message: "请处理错误!"
+                    });
+                }
+            }
         }
     });
 
@@ -152,36 +259,7 @@ function createTable(bicycleTable) {
         paginationLoop: false,
         paginationPreText: "前一页",
         paginationNextText: "后一页",
-        height: 450,
-        onEditableSave: function (field, row, oldValue, $el) {
-            if (field === "bicycle.bicrentprice") {
-                row.bicycle.bicrentprice = row[field];
-            } else if (field === "bicycle.bictype") {
-                row.bicycle.bictype = row[field];
-            }
-            $.ajax({
-                type: "POST",
-                url: "/Bicycle/Administer/EditBicycle.do",
-                dataType: "json",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(row.bicycle),
-                success: function (data) {
-                    var opt = {
-                        url: "/Bicycle/Administer/TableBicycle.do",
-                        silent: true,
-                        query: {
-                            type: 1,
-                            level: 2
-                        }
-                    };
-                    $('#BicycleTable').bootstrapTable('refresh', opt);
-                    alert("修改成功！");
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
-                }
-            });
-        }
+        height: 450
     });
 }
 
@@ -354,6 +432,7 @@ function addTable() {
 }
 
 function deleteTable() {
+    
     var arr = ($('#BicycleTable').bootstrapTable('getSelections'));
     var flag = 1;
     for(var obj of arr) {
@@ -365,38 +444,48 @@ function deleteTable() {
     if (flag === 1) {
         var array = new Array();
         if (arr.length !== 0) {
-            for (var i = 0; i < arr.length; i++) {
-                array.push(arr[i].BicId);
-            }
-            $.ajax({
-                url: "/Admin/RemoveBicycle",
-                type: "post",
-                dataType: "json",
-                traditional: true,
-                data: {
-                    arr: array
-                },
-                success: function (data) {
-                    $.growl.notice({
-                        title: "成功",
-                        message: "删除成功!"
-                    });
+            swal({
+                title: "你确定要删除吗?",
+                //text: "Once deleted, you will not be able to recover this imaginary file!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    for (var i = 0; i < arr.length; i++) {
+                        array.push(arr[i].BicId);
+                    }
                     $.ajax({
-                        url: "/Admin/GetBicycleTable",
+                        url: "/Admin/RemoveBicycle",
                         type: "post",
                         dataType: "json",
+                        traditional: true,
+                        data: {
+                            arr: array
+                        },
                         success: function (data) {
-                            data = eval("(" + data + ")");
-                            bicycleTable.bicycles = data;
-                            createTable(bicycleTable);
+                            swal("成功! 删除成功!", {
+                                icon: "success",
+                            });
+                            $.ajax({
+                                url: "/Admin/GetBicycleTable",
+                                type: "post",
+                                dataType: "json",
+                                success: function (data) {
+                                    data = eval("(" + data + ")");
+                                    bicycleTable.bicycles = data;
+                                    createTable(bicycleTable);
+                                },
+                                error: function (xhr) {
+                                    console.log(xhr.responseText);
+                                }
+                            });
                         },
                         error: function (xhr) {
-                            console.log(xhr.responseText);
+                            console.log(xhr.responseText)
                         }
                     });
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText)
                 }
             });
         }

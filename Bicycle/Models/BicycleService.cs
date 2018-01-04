@@ -56,5 +56,22 @@ namespace Bicycle.Models
                 return false;
             }
         }
+
+        public static module_bicycle updataBicycleInfo(int bicId, string bicType, double bicPrice)
+        {
+            var db = new DBModel();
+            module_bicycle bicycle = db.module_bicycle.FirstOrDefault(u => u.BicId == bicId);
+            if(bicycle != null)
+            {
+                bicycle.BicType = bicType;
+                bicycle.BicRentPrice = bicPrice;
+                db.SaveChanges();
+                return bicycle;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -15,6 +15,9 @@
                 <button class="btn btn-default" id="delete-table">
                     <i class="fa fa-trash fa-lg"></i> 删除
                 </button>
+                <button class="btn btn-default" id="updata-table" v-on:click="updataTable">
+                    <i class="fa fa-edit fa-lg"></i> 修改
+                </button>
             </div>
         </div>
         <table id="BicycleTable" data-toolbar="#toolbar"></table>
@@ -71,6 +74,46 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="addTableConfirm" disabled="disabled">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="modal fade" id="modalUpdataTable" role="dialog" aria-labelledby="modalLabelUpdataTable" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="BicId"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row spacing form-group has-feedback" id="bicTypeG">
+                            <div class="col-md-3 col-md-offset-2">
+                                <label class="control-label">类型</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" id="Type" class="form-control" v-on:input="changeType" />
+                                <div class="feed-back">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row spacing form-group has-feedback" id="bicPriceG">
+                            <div class="col-md-3 col-md-offset-2">
+                                <label class="control-label">价格(元/小时)</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" id="Price" class="form-control" v-on:input="changePrice" />
+                                <div class="feed-back">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="upDataTableConfirm" v-on:click="saveChanges">确认</button>
                     </div>
                 </div>
             </div>

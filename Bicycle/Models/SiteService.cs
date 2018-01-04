@@ -7,16 +7,15 @@ namespace Bicycle.Models
 {
     public class SiteService
     {
+        private static DBModel db = new DBModel();
         public static List<module_site> getSiteByArea(string siteArea)
         {
-            var db = new DBModel();
             List<module_site> list = db.module_site.Where(u => u.SiteArea == siteArea).OrderBy(u => u.SiteAmount).ToList();
             return list;
         }
 
         public static module_site updateSiteAmount(int siteId, string method)
         {
-            var db = new DBModel();
             module_site site = db.module_site.FirstOrDefault(u => u.SiteId == siteId);
             if(method.Equals("borrow"))
             {
@@ -32,16 +31,52 @@ namespace Bicycle.Models
 
         public static module_site getSiteById(int siteId)
         {
-            var db = new DBModel();
             var site = db.module_site.FirstOrDefault(u => u.SiteId == siteId);
             return site;
         }
 
         public static List<module_site> getAllSite()
         {
-            var db = new DBModel();
             List<module_site> list = db.module_site.OrderBy(u => u.SiteAmount).ToList();
             return list;
         }
+
+        public static module_site insertSite(module_site site)
+        {
+            db.module_site.Add(site);
+            db.SaveChanges();
+            return site;
+        }
+
+        public static bool deleteSite(int siteId)
+        {
+            module_site site = db.module_site.FirstOrDefault(u => u.SiteId == siteId);
+            if(site != null)
+            {
+                db.module_site.Remove(site);
+                db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static module_site updataSiteName(int siteId, string siteName)
+        {
+            module_site site = db.module_site.FirstOrDefault(u => u.SiteId == siteId);
+            if(site != null)
+            {
+                site.SiteName = siteName;
+                db.SaveChanges();
+                return site;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }
