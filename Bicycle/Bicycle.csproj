@@ -195,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin.css" />
+    <Content Include="Content\admininfo.css" />
     <Content Include="Content\bicycle.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
@@ -214,6 +215,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\adminbicycle.js" />
+    <Content Include="Scripts\adminborrow.js" />
+    <Content Include="Scripts\admininfo.js" />
     <Content Include="Scripts\adminsite.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
@@ -271,6 +274,8 @@
     <Content Include="Views\Shared\_LayoutPageAdmin.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\AdminSite.cshtml" />
+    <Content Include="Views\Admin\AdminBorrow.cshtml" />
+    <Content Include="Views\Admin\AdminIfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

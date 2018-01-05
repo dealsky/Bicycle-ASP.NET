@@ -27,10 +27,13 @@
                 }
             });
             getBorrowedBicycle(this);
+            //$("#checkSite").find("option [text='五乡镇']").attr("selected", true);
+            this.siteSelected = "五乡镇";
+            this.selectSite();
         },
         methods: {
             selectSite: function () {
-                var siteArea = borrowBicycle.siteSelected;
+                var siteArea = this.siteSelected;
                 $.ajax({
                     url: "/User/SelectedSite",
                     type: "post",

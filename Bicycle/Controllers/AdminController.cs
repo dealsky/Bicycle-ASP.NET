@@ -22,6 +22,18 @@ namespace Bicycle.Controllers
             return View();
         }
 
+        [Filters.AdminAuthorize]
+        public ActionResult AdminBorrow()
+        {
+            return View();
+        }
+
+        [Filters.AdminAuthorize]
+        public ActionResult AdminIfo()
+        {
+            return View();
+        }
+
         public JsonResult Login(string adminAcc, string adminPass)
         {
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
@@ -198,6 +210,67 @@ namespace Bicycle.Controllers
             {
                 return Json("error");
             }
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult GetBorrowTable()
+        {
+            List<module_rented> list = RentedService.getAllRented();
+            JsonSerializerSettings setting = new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            var ret = JsonConvert.SerializeObject(list, setting);
+            return Json(ret);
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult GetAdminInfo()
+        {
+            module_manager admin = (module_manager)Session["admin"];
+            JsonSerializerSettings setting = new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            var ret = JsonConvert.SerializeObject(admin, setting);
+            return Json(ret);
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult AdminPsssRight(string MagPass)
+        {
+            module_manager admin = (module_manager)Session["admin"];
+            if(admin.MagPass.Equals(MagPass))
+            {
+                return Json("ok");
+            }
+            else
+            {
+                return Json("error");
+            }
+        }
+
+        [HttpPost]
+        [Filters.AdminAuthorize]
+        public JsonResult UpdataAdminInfo(module_manager admin)
+        {
+            var db = new DBModel();
+            module_manager oldAdmin = (module_manager)Session["admin"];
+            module_manager newAdmin = db.module_manager.FirstOrDefault(u => u.MagId == oldAdmin.MagId);
+            newAdmin.MagName = admin.MagName;
+            newAdmin.MagSex = admin.MagSex;
+            newAdmin.MagTel = admin.MagTel;
+            if(admin.MagPass != null)
+            {
+                newAdmin.MagPass = admin.MagPass;
+            }
+            
+            db.SaveChanges();
+            Session["admin"] = newAdmin;
+            return Json("ok");
         }
     }
 }

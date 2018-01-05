@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPageAdmin.cshtml";
+    @Styles.Render("~/Content/admininfo.css")
+    ViewBag.Title = "信息编辑";
+}
+
+<div class="main-body" id="adminInfo">
+    <div class="col-md-6 col-md-offset-3">
+        <h3>管理人员信息编辑</h3>
+        <hr />
+        <div class="one-info">
+            <label class="control-label">名称</label>
+            <input class="form-control" id="adminName" type="text" v-model="MagName"/>
+        </div>
+        <div class="one-info">
+            <label class="control-label">联系电话</label>
+            <input class="form-control" id="adminTel" type="text" v-model="MagTel"/>
+        </div>
+        <div class="one-info">
+            <label class="control-label">性别</label><br />
+            <input id="sexMale" name="adminSex" value="1" type="radio" v-model="MagSex"/> 男
+            <input id="sexFemale" name="adminSex" value="0" type="radio" v-model="MagSex"/> 女
+        </div>
+        <div class="one-info">
+            <label class="control-label">密码</label>
+            <input class="form-control" id="adminPass" type="password" v-model="MagPass" v-on:input="inputPass"/>
+        </div>
+        <div class="one-info">
+            <label class="control-label">新密码</label>
+            <input class="form-control" id="passAgain" type="password" disabled v-model="PassAgain"/>
+        </div>
+        <button class="button button-action button-rounded" v-on:click="updataAdminInfo">更新信息</button>
+    </div>
+    <div class="clear"></div>
+</div>
+
+@Scripts.Render("~/Scripts/admininfo.js")

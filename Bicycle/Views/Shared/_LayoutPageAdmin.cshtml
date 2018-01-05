@@ -23,6 +23,8 @@
     @Scripts.Render("~/Scripts/bootstrap-table-zh-CN.js")
     @Scripts.Render("~/Scripts/dialog.js")
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.20.1/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.20.1/locale/zh-cn.js"></script>
     @RenderSection("scripts", required: false)
 </head>
 <body>
@@ -54,6 +56,7 @@
                         <li><a href="/Admin/Index">自行车管理</a></li>
                         <li><a href="/Admin/AdminSite">站点管理</a></li>
                         <li><a href="/Admin/AdminBorrow">租借管理</a></li>
+                        <li><a href="/Admin/AdminIfo">信息编辑</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a>欢迎您</a></li>

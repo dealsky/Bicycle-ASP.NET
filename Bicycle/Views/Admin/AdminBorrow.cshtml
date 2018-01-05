@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPageAdmin.cshtml";
+    ViewBag.Title = "租借管理";
+}
+
+<div class="admin-table">
+    <span class="label label-info">租借管理</span>
+    <table id="borrowTable"></table>
+</div>
+
+@Scripts.Render("~/Scripts/adminborrow.js")
