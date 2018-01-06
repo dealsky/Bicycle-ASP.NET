@@ -52,5 +52,19 @@ namespace Bicycle.Models
         {
             return db.module_rented.ToList();
         }
+
+        public static int getDayBorrowCount(DateTime day)
+        {
+            int sum = 0;
+            List<module_rented> list = db.module_rented.ToList();
+            for(int i = 0; i<list.Count; i++)
+            {
+                if(((DateTime)list[i].RentBowTime).Day.Equals(day.Day))
+                {
+                    sum++;
+                }
+            }
+            return sum;
+        }
     }
 }

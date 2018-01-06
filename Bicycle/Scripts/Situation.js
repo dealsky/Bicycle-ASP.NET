@@ -71,10 +71,11 @@ function setChart() {
     typeCountChart();
     borrowCountChart();
     siteCountChart();
+    weekCountChart();
 }
 
 function typeCountChart() {
-    var colors = randColor();
+    var colors = randColor(5);
     $.ajax({
         url: "/User/TypeChart",
         type: "post",
@@ -106,7 +107,7 @@ function typeCountChart() {
 }
 
 function borrowCountChart() {
-    var colors = randColor();
+    var colors = randColor(5);
     $.ajax({
         url: "/User/BorrowChart",
         type: "post",
@@ -138,7 +139,7 @@ function borrowCountChart() {
 }
 
 function siteCountChart() {
-    var colors = randColor();
+    var colors = randColor(5);
     $.ajax({
         url: "/User/SiteChart",
         type: "post",
@@ -169,11 +170,39 @@ function siteCountChart() {
     });
 }
 
-function randColor() {
+function weekCountChart() {
+    var colors = randColor(7);
+    var days = lastDays(7);
+    var ctx = $("#weekCountChart").get(0).getContext("2d");
+    
+    $.ajax({
+        url: "/User/GetWeekCount",
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        label: "近一个星期租借数量统计",
+                    }],
+                    labels: days
+                }
+            });
+        },
+        error: function (xhr) {
+            console.log("ajax error");
+        }
+    });
+}
+
+function randColor(n) {
     var colorAll = ['#16a085', '#27ae60', '#2c3e50', '#f39c12', '#e74c3c', '#9b59b6', '#FB6964', '#342224', '#472E32', '#BDBB99', '#77B1A9', '#73A857'];
     var colors = [];
-    while(colors.length < 5) {
-        var num = parseInt(Math.random() * (5 + 1), 10);
+    while(colors.length < n) {
+        var num = parseInt(Math.random() * (n + 1), 10);
         var flag = true;
         for(var i = 0; i<colors.length; i++) {
             if (colors[i] === colorAll[num]) {
@@ -186,4 +215,12 @@ function randColor() {
         }
     }
     return colors;
+}
+
+function lastDays(n) {
+    var days = [];
+    for (var i = 0; i < n; i++) {
+        days.push(moment().subtract(n - i - 1, "d").format("YYYY-MM-DD"));
+    }
+    return days;
 }

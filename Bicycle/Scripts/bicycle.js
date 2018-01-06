@@ -228,7 +228,21 @@ function getSiteTable(borrowBicycle) {
         paginationNextText: "后一页",
         height: 475,
         onClickRow: function (row) {
-            getBicycleTable(row.module_park);
+            $.ajax({
+                url: "/User/GetBicycleTable",
+                type: "post",
+                dataType: "json",
+                data: {
+                    siteId: row.SiteId
+                },
+                success: function (data) {
+                    data = eval("(" + data + ")");
+                    getBicycleTable(data);
+                },
+                error: function () {
+                    console.log("ajax error");
+                }
+            })
             borrowBicycle.siteNow = row.SiteName;
         }
     });

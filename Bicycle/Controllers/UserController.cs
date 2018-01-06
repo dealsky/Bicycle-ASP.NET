@@ -29,7 +29,6 @@ namespace Bicycle.Controllers
             return View();
         }
 
-        [Filters.UserAuthorize]
         public ActionResult Situation()
         {
             return View();
@@ -345,6 +344,19 @@ namespace Bicycle.Controllers
 
         [Filters.UserAuthorize]
         [HttpPost]
+        public JsonResult GetBicycleTable(int siteId)
+        {
+            List<module_park> list = ParkService.getParkBySiteId(siteId);
+            JsonSerializerSettings setting = new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            var ret = JsonConvert.SerializeObject(list, setting);
+            return Json(ret);
+        }
+
+        [Filters.UserAuthorize]
+        [HttpPost]
         public JsonResult BorrowedBicycle()
         {
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
@@ -413,7 +425,6 @@ namespace Bicycle.Controllers
             return Json(dictionary);
         }
 
-        [Filters.UserAuthorize]
         [HttpPost]
         public JsonResult GetSituation()
         {
@@ -495,7 +506,6 @@ namespace Bicycle.Controllers
             return Json(dictionary);
         }
 
-        [Filters.UserAuthorize]
         [HttpPost]
         public JsonResult TypeChart()
         {
@@ -534,7 +544,6 @@ namespace Bicycle.Controllers
             }
         }
 
-        [Filters.UserAuthorize]
         [HttpPost]
         public JsonResult BorrowChart()
         {
@@ -574,7 +583,6 @@ namespace Bicycle.Controllers
             }
         }
 
-        [Filters.UserAuthorize]
         [HttpPost]
         public JsonResult SiteChart()
         {
@@ -592,6 +600,18 @@ namespace Bicycle.Controllers
                 dictionary.Add(siteList[i].SiteName, siteList[i].SiteAmount);
             }
             return Json(dictionary);
+        }
+
+        [HttpPost]
+        public JsonResult GetWeekCount()
+        {
+            List<int> list = new List<int>();
+            DateTime now = DateTime.Now;
+            for(int i = 6; i>=0; i--)
+            {
+                list.Add(RentedService.getDayBorrowCount(now.AddDays(-i)));
+            }
+            return Json(list);
         }
     }
 }

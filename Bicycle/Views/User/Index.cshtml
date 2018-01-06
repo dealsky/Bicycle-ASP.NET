@@ -1,5 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    @Styles.Render("~/Content/zoomify.css")
+    @Scripts.Render("~/Scripts/zoomify.min.js")
     ViewBag.Title = "主页";
 }
 
@@ -24,6 +26,9 @@
     <div class="col-md-4">
         <h2>租/还车流程</h2>
         <img class="zoomify" src="~/Content/image/howToUse.jpg" width="360px">
+        <script type="text/javascript">
+            $('.zoomify').zoomify();
+        </script>
     </div>
     <div class="col-md-4">
         <h2>今日天气</h2>

@@ -7,9 +7,9 @@ namespace Bicycle.Models
 {
     public class ParkService
     {
+        private static DBModel db = new DBModel();
         public static bool deleteParkById(int parkId)
         {
-            var db = new DBModel();
             var park = db.module_park.FirstOrDefault(u => u.ParkId == parkId);
             if(park != null)
             {
@@ -25,7 +25,6 @@ namespace Bicycle.Models
 
         public static module_park insertPark(module_park park)
         {
-            var db = new DBModel();
             db.module_park.Add(park);
             db.SaveChanges();
             return park;
@@ -33,7 +32,6 @@ namespace Bicycle.Models
 
         public static bool deleteParkByBicId(int bicId)
         {
-            var db = new DBModel();
             var park = db.module_park.FirstOrDefault(u => u.BicId == bicId);
             if (park != null)
             {
@@ -46,6 +44,11 @@ namespace Bicycle.Models
             {
                 return false;
             }
+        }
+
+        public static List<module_park> getParkBySiteId(int siteId)
+        {
+            return db.module_park.Where(u => u.SiteId == siteId).ToList();
         }
     }
 }
