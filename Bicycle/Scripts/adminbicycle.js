@@ -15,12 +15,11 @@ $(document).ready(function () {
                 type: "post",
                 dataType: "json",
                 success: function (data) {
-                    data = eval("(" + data + ")");
                     bicycleTable.bicycles = data;
                     createTable(bicycleTable);
                 },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
+                error: function () {
+                    console.log("ajax error");
                 }
             });
         },
@@ -32,7 +31,7 @@ $(document).ready(function () {
                         $("#BicId").text(arr[0].BicId);
                         $("#Type").val(arr[0].BicType);
                         $("#Price").val(arr[0].BicRentPrice);
-                        $("#Site").val(arr[0].module_park[0].SiteId);
+                        $("#Site").val(arr[0].SiteId);
                         $('#modalUpdataTable').modal('show');
                     } else {
                         $.growl.error({
@@ -93,7 +92,6 @@ $(document).ready(function () {
                             bicPrice: bicPrice
                         },
                         success: function (data) {
-                            console.log(data);
                             if (data === "ok") {
                                 $('#modalUpdataTable').modal('hide');
                                 $.growl.notice({
@@ -105,12 +103,11 @@ $(document).ready(function () {
                                     type: "post",
                                     dataType: "json",
                                     success: function (data) {
-                                        data = eval("(" + data + ")");
                                         bicycleTable.bicycles = data;
                                         createTable(bicycleTable);
                                     },
-                                    error: function (xhr) {
-                                        console.log(xhr.responseText);
+                                    error: function () {
+                                        console.log("ajax error");
                                     }
                                 });
                             } else {
@@ -118,7 +115,7 @@ $(document).ready(function () {
                             }
                         },
                         error: function (xhr) {
-                            console.log(xhr.responseText);
+                            console.log("ajax error");
                         }
                     });
                 } else {
@@ -191,33 +188,28 @@ function createTable(bicycleTable) {
                 }
             },
             {
-                field: 'module_park',
+                field: 'SiteName',
                 title: '停靠站点',
+                sortable: true,
                 formatter: function (value) {
-                    if (value.length != 0) {
-                        return value[0].SiteName;
+                    if (value != null) {
+                        return value;
                     } else {
-                        return "";
+                        return "---";
                     }
                 },
-                searchable: false
             },
             {
-                field: 'module_rented',
+                field: 'UserName',
                 title: '租借者',
+                sortable: true,
                 formatter: function (value) {
-                    if (value.length != 0) {
-                        for(var obj of value) {
-                            if (obj.RentStatus === 1) {
-                                return obj.UserName;
-                            }
-                        }
-                        return "";
+                    if (value != null) {
+                        return value;
                     } else {
-                        return "";
+                        return "---";
                     }
                 },
-                searchable: false
             },
             {
                 field: 'BicBorrowed',
@@ -241,9 +233,7 @@ function createTable(bicycleTable) {
                 title: '购买时间',
                 sortable: true,
                 formatter: function (value) {
-                    var date = new Date(value);
-                    var month = date.getMonth() + 1;
-                    return date.getFullYear() + "-" + month + "-" + date.getDate();
+                    return moment(value).format("YYYY-MM-DD");
                 }
             }
         ],
@@ -328,8 +318,8 @@ function siteJudge() {
                     flag[2] = false;
                 }
             },
-            error: function (xhr) {
-                console.log(xhr.responseText);
+            error: function () {
+                console.log("ajax error");
             }
         });
     } else {
@@ -414,18 +404,17 @@ function addTable() {
                     type: "post",
                     dataType: "json",
                     success: function (data) {
-                        data = eval("(" + data + ")");
                         bicycleTable.bicycles = data;
                         createTable(bicycleTable);
                     },
-                    error: function (xhr) {
-                        console.log(xhr.responseText);
+                    error: function () {
+                        console.log("ajax error");
                     }
                 });
             }
         },
-        error: function (xhr) {
-            console.log(xhr.responseText);
+        error: function () {
+            console.log("ajax error");
         }
     });
     flag = [false, false, false, false];
@@ -473,17 +462,16 @@ function deleteTable() {
                                 type: "post",
                                 dataType: "json",
                                 success: function (data) {
-                                    data = eval("(" + data + ")");
                                     bicycleTable.bicycles = data;
                                     createTable(bicycleTable);
                                 },
-                                error: function (xhr) {
-                                    console.log(xhr.responseText);
+                                error: function () {
+                                    console.log("ajax error");
                                 }
                             });
                         },
-                        error: function (xhr) {
-                            console.log(xhr.responseText)
+                        error: function () {
+                            console.log("ajax error");
                         }
                     });
                 }
@@ -492,7 +480,7 @@ function deleteTable() {
     } else {
         $.growl.error({
             title: "失败",
-            message: "删除失败!"
+             essage: "删除失败!"
         });
     }
 }

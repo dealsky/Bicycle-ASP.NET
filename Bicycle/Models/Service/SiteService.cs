@@ -78,5 +78,18 @@ namespace Bicycle.Models
             }
         }
 
+        public static List<SiteTable> getSiteTable()
+        {
+            List<SiteTable> list = db.module_site.Join(db.module_manager, s => s.MagId, m => m.MagId, (s, m) => new SiteTable()
+            {
+                SiteId = s.SiteId,
+                MagId = s.MagId,
+                MagName = m.MagName,
+                SiteName = s.SiteName,
+                SiteArea = s.SiteArea,
+                SiteAmount = s.SiteAmount
+            }).ToList();
+            return list;
+        }
     }
 }

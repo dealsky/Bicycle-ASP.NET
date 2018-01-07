@@ -8,7 +8,6 @@ function getData() {
         type: "post",
         DataType: "json",
         success: function (data) {
-            data = eval("(" + data + ")");
             createTable(data);
         },
         error: function () {
@@ -46,9 +45,9 @@ function createTable(data) {
                 sortable: true,
                 formatter: function (value) {
                     if (value === 0) {
-                        return "已还";
+                        return "<span class=\"text-success\">已还</span>";
                     } else {
-                        return "未还";
+                        return "<span class=\"text-danger\">未还</span>";
                     }
                 }
             },
@@ -73,7 +72,7 @@ function createTable(data) {
                     if (value) {
                         return moment(value).format("YYYY-MM-DD hh:mm:ss");
                     } else {
-                        return "";
+                        return "---";
                     }
                 }
             }

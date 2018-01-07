@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data;
+using System.Data.Entity;
+using System.Net;
+using System.Web.Mvc;
+using Bicycle.Models;
 
 namespace Bicycle.Models
 {
@@ -48,9 +53,23 @@ namespace Bicycle.Models
             return rented;
         }
 
-        public static List<module_rented> getAllRented()
+        public static List<ModuleRented> getAllRented()
         {
-            return db.module_rented.ToList();
+            List<ModuleRented> list;
+            list = db.module_rented.Select(u => new ModuleRented()
+            {
+                RentId = u.RentId,
+                BicId = u.BicId,
+                UserId = u.UserId,
+                UserName = u.UserName,
+                BicType = u.BicType,
+                BicRentPrice = u.BicRentPrice,
+                RentPrice = u.RentPrice,
+                RentStatus = u.RentStatus,
+                RentBowTime = u.RentBowTime,
+                RentRenTime = u.RentRenTime
+            }).ToList();
+            return list;
         }
 
         public static int getDayBorrowCount(DateTime day)

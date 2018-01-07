@@ -34,7 +34,6 @@
                     type: "post",
                     dataType: "json",
                     success: function (data) {
-                        data = eval("(" + data + ")");
                         adminSite.allSite = data;
                         createTable(adminSite.allSite);
                     },
@@ -176,8 +175,8 @@ function createTable(allSite) {
                 sortable: true
             },
             {
-                field: 'MagId',
-                title: '管理员编号',
+                field: 'MagName',
+                title: '管理员姓名',
                 sortable: true
             },
             {

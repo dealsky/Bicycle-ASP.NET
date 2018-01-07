@@ -7,9 +7,9 @@ namespace Bicycle.Models
 {
     public class BicycleService
     {
+        private static DBModel db = new DBModel();
         public static module_bicycle updateBorrowedBic(int bicId)
         {
-            var db = new DBModel();
             module_bicycle bicycle = db.module_bicycle.FirstOrDefault(u => u.BicId == bicId);
             bicycle.BicBorrowedCount = bicycle.BicBorrowedCount + 1;
             bicycle.BicBorrowed = 1;
@@ -19,7 +19,6 @@ namespace Bicycle.Models
 
         public static module_bicycle updateReturnBic(int bicId)
         {
-            var db = new DBModel();
             module_bicycle bicycle = db.module_bicycle.FirstOrDefault(u => u.BicId == bicId);
             bicycle.BicBorrowed = 0;
             db.SaveChanges();
@@ -28,14 +27,12 @@ namespace Bicycle.Models
 
         public static List<module_bicycle> getAllBicycle()
         {
-            var db = new DBModel();
             List < module_bicycle > list = db.module_bicycle.ToList();
             return list;
         }
 
         public static module_bicycle insertBicycle(module_bicycle bicycle)
         {
-            var db = new DBModel();
             db.module_bicycle.Add(bicycle);
             db.SaveChanges();
             return bicycle;
@@ -43,7 +40,6 @@ namespace Bicycle.Models
 
         public static bool deleteBicycleById(int bicId)
         {
-            var db = new DBModel();
             var bicycle = db.module_bicycle.FirstOrDefault(u => u.BicId == bicId);
             if (bicycle != null)
             {
@@ -59,7 +55,6 @@ namespace Bicycle.Models
 
         public static module_bicycle updataBicycleInfo(int bicId, string bicType, double bicPrice)
         {
-            var db = new DBModel();
             module_bicycle bicycle = db.module_bicycle.FirstOrDefault(u => u.BicId == bicId);
             if(bicycle != null)
             {
@@ -72,6 +67,39 @@ namespace Bicycle.Models
             {
                 return null;
             }
+        }
+
+        public static List<BicycleTable> getBicycleTable()
+        {
+            List<BicycleTable> list1 = db.module_bicycle.Join(db.module_park, b => b.BicId, p => p.BicId, (b, p) => new BicycleTable()
+            {
+                BicId = b.BicId,
+                BicType = b.BicType,
+                BicRentPrice = b.BicRentPrice,
+                SiteId = p.SiteId,
+                SiteName = p.SiteName,
+                UserName = null,
+                BicBorrowed = b.BicBorrowed,
+                BicBorrowedCount = b.BicBorrowedCount,
+                BicBuytime = b.BicBuytime
+            }).ToList();
+
+            List<BicycleTable> list2 = db.module_bicycle.Where(b => b.BicBorrowed == 1)
+                .Join(db.module_rented, b => b.BicId, r => r.BicId, (b, r) => new BicycleTable()
+            {
+                BicId = b.BicId,
+                BicType = b.BicType,
+                BicRentPrice = b.BicRentPrice,
+                SiteId = -1,
+                SiteName = null,
+                UserName = r.UserName,
+                BicBorrowed = b.BicBorrowed,
+                BicBorrowedCount = b.BicBorrowedCount,
+                BicBuytime = b.BicBuytime
+            }).ToList();
+            List<BicycleTable> list;
+            list = list1.Union(list2).ToList<BicycleTable>();
+            return list;
         }
     }
 }

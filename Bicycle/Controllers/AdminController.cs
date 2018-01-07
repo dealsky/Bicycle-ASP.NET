@@ -70,15 +70,8 @@ namespace Bicycle.Controllers
         [Filters.AdminAuthorize]
         public JsonResult GetBicycleTable()
         {
-            List<module_bicycle> list = BicycleService.getAllBicycle();
-
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(list, setting);
-
-            return Json(ret);
+            List<BicycleTable> list = BicycleService.getBicycleTable();
+            return Json(list);
         }
 
         [HttpPost]
@@ -156,13 +149,8 @@ namespace Bicycle.Controllers
         [Filters.AdminAuthorize]
         public JsonResult GetSite()
         {
-            List<module_site> list = SiteService.getAllSite();
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(list, setting);
-            return Json(ret);
+            List<SiteTable> list = SiteService.getSiteTable();
+            return Json(list);
         }
 
         [HttpPost]
@@ -216,13 +204,8 @@ namespace Bicycle.Controllers
         [Filters.AdminAuthorize]
         public JsonResult GetBorrowTable()
         {
-            List<module_rented> list = RentedService.getAllRented();
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(list, setting);
-            return Json(ret);
+            List<ModuleRented> list = RentedService.getAllRented();
+            return Json(list);
         }
 
         [HttpPost]
