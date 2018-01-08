@@ -15,7 +15,6 @@
                 type: "post",
                 dataType: "json",
                 success: function (data) {
-                    data = eval("(" + data + ")");
                     adminInfo.MagName = data.MagName;
                     adminInfo.MagSex = data.MagSex;
                     adminInfo.MagTel = data.MagTel;

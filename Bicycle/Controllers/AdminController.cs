@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Bicycle.Models;
 using Newtonsoft.Json;
+using Bicycle.Models.dto;
 
 namespace Bicycle.Controllers
 {
@@ -213,12 +214,8 @@ namespace Bicycle.Controllers
         public JsonResult GetAdminInfo()
         {
             module_manager admin = (module_manager)Session["admin"];
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(admin, setting);
-            return Json(ret);
+            ModuleManager manager = ManagerService.getManagerByIdG(admin.MagId);
+            return Json(manager);
         }
 
         [HttpPost]

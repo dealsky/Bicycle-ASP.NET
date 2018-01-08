@@ -1,4 +1,5 @@
 ﻿using Bicycle.Models;
+using Bicycle.Models.dto;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -282,13 +283,8 @@ namespace Bicycle.Controllers
         [HttpPost]
         public JsonResult SelectedSite(string siteArea)
         {
-            List<module_site> list = SiteService.getSiteByArea(siteArea);
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(list, setting);
-            return Json(ret);
+            List<ModuleSite> list = SiteService.getSiteByAreaG(siteArea);
+            return Json(list);
         }
 
         [Filters.UserAuthorize]
@@ -346,13 +342,8 @@ namespace Bicycle.Controllers
         [HttpPost]
         public JsonResult GetBicycleTable(int siteId)
         {
-            List<module_park> list = ParkService.getParkBySiteId(siteId);
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(list, setting);
-            return Json(ret);
+            List<ModulePark> list = ParkService.getParkBySiteIdG(siteId);
+            return Json(list);
         }
 
         [Filters.UserAuthorize]
@@ -361,10 +352,10 @@ namespace Bicycle.Controllers
         {
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             module_user user = (module_user)Session["user"];
-            List<module_rented> list = RentedService.getRentedByUserId(user.UserId, "borrowed");
-            if(list != null)
+            List<ModuleRented> list = RentedService.getRentedByUserIdG(user.UserId);
+            if (list.Count != 0)
             {
-                module_rented rented = list[0];
+                ModuleRented rented = list[0];
                 dictionary.Add("log", "ok");
                 dictionary.Add("rented", rented);
             }
@@ -372,12 +363,7 @@ namespace Bicycle.Controllers
             {
                 dictionary.Add("log", "none");
             }
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(dictionary, setting);
-            return Json(ret);
+            return Json(dictionary);
         }
 
         [Filters.UserAuthorize]

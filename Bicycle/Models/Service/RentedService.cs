@@ -36,6 +36,19 @@ namespace Bicycle.Models
             }
         }
 
+        public static List<ModuleRented> getRentedByUserIdG(int userId)
+        {
+            List<ModuleRented> list = db.module_rented.Where(r => r.UserId == userId && r.RentStatus == 1)
+                .Select(r => new ModuleRented() {
+                    BicId = r.BicId,
+                    BicType = r.BicType,
+                    RentId = r.RentId,
+                    RentBowTime = r.RentBowTime,
+                    BicRentPrice = r.BicRentPrice,
+                }).ToList();
+            return list;
+        }
+
         public static module_rented insertRented(module_rented rented)
         {
             db.module_rented.Add(rented);

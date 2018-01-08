@@ -27,7 +27,6 @@
                 }
             });
             getBorrowedBicycle(this);
-            //$("#checkSite").find("option [text='五乡镇']").attr("selected", true);
             this.siteSelected = "五乡镇";
             this.selectSite();
         },
@@ -42,7 +41,6 @@
                         siteArea: siteArea
                     },
                     success: function (data) {
-                        data = eval('(' + data + ')');
                         var arr = [];
                         for(site of data) {
                             arr.push(site);
@@ -89,6 +87,7 @@
                                             title: "成功",
                                             message: "还车成功!"
                                         });
+                                        borrowBicycle.selectSite();
                                     } else if (data.log === "siteNone") {
                                         $.growl.error({
                                             title: "失败",
@@ -149,7 +148,7 @@
                                     title: "成功",
                                     message: "租车成功!"
                                 });
-
+                                borrowBicycle.selectSite();
                                 getBorrowedBicycle(borrowBicycle);
 
                             } else if (data.log === "borrowed") {
@@ -236,7 +235,6 @@ function getSiteTable(borrowBicycle) {
                     siteId: row.SiteId
                 },
                 success: function (data) {
-                    data = eval("(" + data + ")");
                     getBicycleTable(data);
                 },
                 error: function () {
@@ -308,12 +306,11 @@ function getBorrowedBicycle(borrowBicycle) {
         type: "post",
         dataType: "json",
         success: function (data) {
-            data = eval("(" + data + ")");
             if (data.log === "ok") {
                 var rented = data.rented;
                 var nowTime = new Date().getTime();
-                var rentTime = new Date(rented.RentBowTime);
-                var minutes = parseInt((nowTime - rentTime) / 1000 / 60);
+                var rentTime = moment(rented.RentBowTime);
+                var minutes = parseInt((nowTime - rentTime.unix()*1000) / 1000 / 60);
                 var price = rented.BicRentPrice;
                 if (minutes % 60 === 0) {
                     price = parseInt(minutes / 60) * price;

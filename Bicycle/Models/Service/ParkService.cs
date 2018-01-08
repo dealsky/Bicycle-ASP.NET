@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bicycle.Models.dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -49,6 +50,20 @@ namespace Bicycle.Models
         public static List<module_park> getParkBySiteId(int siteId)
         {
             return db.module_park.Where(u => u.SiteId == siteId).ToList();
+        }
+
+        public static List<ModulePark> getParkBySiteIdG(int siteId)
+        {
+            List<ModulePark> list = db.module_park.Where(p => p.SiteId == siteId)
+                .Select(p => new ModulePark() {
+                    ParkId = p.ParkId,
+                    BicType = p.BicType,
+                    BicRentPrice = p.BicRentPrice,
+                    BicBorrowedCount = p.BicBorrowedCount,
+                    SiteId = p.SiteId,
+                    BicId = p.BicId
+                }).ToList();
+            return list;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bicycle.Models.dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,19 @@ namespace Bicycle.Models
         public static List<module_site> getSiteByArea(string siteArea)
         {
             List<module_site> list = db.module_site.Where(u => u.SiteArea == siteArea).OrderBy(u => u.SiteAmount).ToList();
+            return list;
+        }
+
+        public static List<ModuleSite> getSiteByAreaG(string siteArea)
+        {
+            List<ModuleSite> list = db.module_site.Where(s => s.SiteArea.Equals(siteArea))
+                .Select(s => new ModuleSite() {
+                    SiteId = s.SiteId,
+                    MagId = s.MagId,
+                    SiteName = s.SiteName,
+                    SiteArea = s.SiteArea,
+                    SiteAmount = s.SiteAmount
+                }).ToList();
             return list;
         }
 
