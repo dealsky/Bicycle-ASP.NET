@@ -167,27 +167,17 @@ namespace Bicycle.Controllers
         {
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             module_user user = (module_user)Session["user"];
-            if(user != null)
+            ModuleUser showUser = UserService.getUserByIdG(user.UserId);
+            if(showUser != null)
             {
-                user.UserPass = "";
-                //user.module_login = null;
-                user.module_rentalcard = null;
-                user.module_rented = null;
-                dictionary.Add("user", user);
+                dictionary.Add("user", showUser);
                 dictionary.Add("log", "right");
             }
             else
             {
                 dictionary.Add("log", "error");
             }
-
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(dictionary, setting);
-
-            return Json(ret);
+            return Json(dictionary);
         }
 
         [Filters.UserAuthorize]
@@ -207,8 +197,8 @@ namespace Bicycle.Controllers
         {
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             module_user user = (module_user)Session["user"];
-            module_rentalcard rentalCard = RentalCardService.getRentalCardByUserId(user.UserId);
-            if(rentalCard == null)
+            ModuleRentalCard rentalCard = RentalCardService.getRentalCardByUserIdG(user.UserId);
+            if (rentalCard == null)
             {
                 dictionary.Add("rentalCard", null);
             }
@@ -216,14 +206,7 @@ namespace Bicycle.Controllers
             {
                 dictionary.Add("rentalCard", rentalCard);
             }
-
-            JsonSerializerSettings setting = new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var ret = JsonConvert.SerializeObject(dictionary, setting);
-
-            return Json(ret);
+            return Json(dictionary);
         }
 
         [Filters.UserAuthorize]

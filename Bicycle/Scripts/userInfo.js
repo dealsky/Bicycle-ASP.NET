@@ -1,22 +1,6 @@
 ﻿var rentalCard;
 
 $(document).ready(function () {
-    Date.prototype.Format = function (fmt) {
-        var o = {
-            "M+": this.getMonth() + 1, //月份
-            "d+": this.getDate(), //日
-            "H+": this.getHours(), //小时
-            "m+": this.getMinutes(), //分
-            "s+": this.getSeconds(), //秒
-            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-            "S": this.getMilliseconds() //毫秒
-        };
-        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-        for (var k in o)
-            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        return fmt;
-    };
-
     var userInfo = new Vue({
         el: "#userInfo",
         data: {
@@ -33,7 +17,6 @@ $(document).ready(function () {
                 type: "post",
                 dataType: "json",
                 success: function (data) {
-                    data = eval('(' + data + ')');
                     if (data.log === "right") {
                         var user = data.user;
                         userInfo.userAcc = user.UserAcc;
@@ -218,18 +201,14 @@ function initCard()
         type: "post",
         dataType: "json",
         success: function (data) {
-            data = eval('(' + data + ')');
             var rc = data.rentalCard;
             if (rc != null) {
                 rentalCard.recown = true;
                 rentalCard.recstatus = rc.RecStatus;
                 rentalCard.recid = rc.RecId;
-
                 var num = new Number(rc.RecBalance);
                 rentalCard.recbalance = num.toFixed(2);
-
-                var date = new Date(rc.RecOptime);
-                rentalCard.recoptime = date.Format("yyyy-MM-dd HH:mm:ss");
+                rentalCard.recoptime = moment(rc.RecOptime).format("YYYY-MM-DD hh:mm:ss");
             }
             else {
                 rentalCard.recown = false;

@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Bicycle.Models.dto;
 
 namespace Bicycle.Models
 {
     public class UserService
     {
+        private static DBModel db = new DBModel();
         public static module_user getUserByAcc(string userAcc)
         {
-            var db = new DBModel();
             List<module_user> userList = db.module_user.Where(u => u.UserAcc == userAcc).OrderBy(u => u.UserId).ToList();
             if (userList.Count != 0)
             {
@@ -23,7 +24,6 @@ namespace Bicycle.Models
 
         public static module_user getUserByEmail(string userEmail)
         {
-            var db = new DBModel();
             List<module_user> userList = db.module_user.Where(u => u.UserEmail == userEmail).OrderBy(u => u.UserId).ToList();
             if(userList.Count != 0)
             {
@@ -60,7 +60,6 @@ namespace Bicycle.Models
 
         public static module_user insertUser(module_user user)
         {
-            var db = new DBModel();
             db.module_user.Add(user);
             db.SaveChanges();
             return user;
@@ -68,14 +67,35 @@ namespace Bicycle.Models
 
         public static module_user getUserById(int userId)
         {
-            var db = new DBModel();
             module_user user = db.module_user.Where(u => u.UserId == userId).ToList()[0];
             return user;
         }
 
+        public static ModuleUser getUserByIdG(int userId)
+        {
+            List<ModuleUser> list = db.module_user.Where(u => u.UserId == userId)
+                .Select(u => new ModuleUser()
+                {
+                    UserId = u.UserId,
+                    UserName = u.UserName,
+                    UserSex = u.UserSex,
+                    UserAcc = u.UserAcc,
+                    UserTel = u.UserTel,
+                    UserIdCard = u.UserIdCard,
+                    UserEmail = u.UserEmail
+                }).ToList();
+            if(list.Count != 0)
+            {
+                return list[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static module_user updateUserPass(int userId, string userPass)
         {
-            var db = new DBModel();
             var user = db.module_user.FirstOrDefault(u => u.UserId == userId);
             user.UserPass = userPass;
             db.SaveChanges();
@@ -84,7 +104,6 @@ namespace Bicycle.Models
 
         public static module_user updateUserLoginTime(int userId, DateTime dateTime)
         {
-            var db = new DBModel();
             var user = db.module_user.FirstOrDefault(u => u.UserId == userId);
             user.UserLastLoginTime = dateTime;
             db.SaveChanges();
@@ -93,7 +112,6 @@ namespace Bicycle.Models
 
         public static module_user updateUserInfo(int userId, string userName, string userEmail, string userTel, string userIdCard, int userSex)
         {
-            var db = new DBModel();
             var user = db.module_user.FirstOrDefault(u => u.UserId == userId);
             user.UserName = userName;
             user.UserEmail = userEmail;

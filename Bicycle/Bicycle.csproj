@@ -172,7 +172,9 @@
     <Compile Include="Models\dto\ModuleBicycle.cs" />
     <Compile Include="Models\dto\ModuleManager.cs" />
     <Compile Include="Models\dto\ModulePark.cs" />
+    <Compile Include="Models\dto\ModuleRentalCard.cs" />
     <Compile Include="Models\dto\ModuleSite.cs" />
+    <Compile Include="Models\dto\ModuleUser.cs" />
     <Compile Include="Models\dto\SiteTable.cs" />
     <Compile Include="Models\Service\BicycleService.cs" />
     <Compile Include="Models\dto\BicycleTable.cs" />
