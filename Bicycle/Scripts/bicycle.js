@@ -288,6 +288,8 @@ function getBicycleTable(bicData) {
         pagination: true,
         sortable: true,
         sortOrder: "asc",
+        search: true,
+        //showRefresh: true,
         pageNumber: 1,
         pageSize: 10,
         sidePagination: 'client',

@@ -243,7 +243,7 @@ function createTable(bicycleTable) {
         sidePagination: 'client',
         pageList: [5, 10, 20, 50],
         search: true,
-        showRefresh: true,
+        //showRefresh: true,
         showToggle: true,
         clickToSelect: true,
         paginationLoop: false,
